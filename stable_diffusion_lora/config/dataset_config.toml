@@ -1,0 +1,22 @@
+[[datasets]]
+resolution = 512
+min_bucket_reso = 256
+max_bucket_reso = 1024
+caption_dropout_rate = 0
+caption_tag_dropout_rate = 0
+caption_dropout_every_n_epochs = 0
+flip_aug = false
+color_aug = false
+[[datasets.subsets]]
+image_dir = "/content/drive/MyDrive/Capstone/LoRA/train_data"
+class_tokens = "mksks"
+num_repeats = 10
+
+
+[general]
+enable_bucket = true
+caption_extension = ".caption"
+shuffle_caption = true
+keep_tokens = 0
+bucket_reso_steps = 64
+bucket_no_upscale = false
