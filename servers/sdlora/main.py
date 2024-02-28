@@ -1,7 +1,10 @@
 import sys
 import os
 import random
+import shortuuid
 import torch
+import cloudinary
+import cloudinary.uploader
 from typing import Union
 from fastapi import FastAPI
 from pydantic import BaseModel
@@ -20,6 +23,13 @@ class PromptResponse(BaseModel):
 load_dotenv()
 
 api_key = os.getenv("API_KEY")
+base_path = os.getenv("BASE_PATH")
+       
+cloudinary.config(
+    cloud_name = os.getenv("CL_CLOUD_NAME"),
+    api_key = os.getenv("CL_API_KEY"),
+    api_secret = os.getenv("CL_API_SECRET")
+)
 
 app = FastAPI()
 
@@ -49,8 +59,8 @@ async def create_prompt(prompt: PromptRequest):
     negative_prompt = """lowres, text, error, cropped, worst quality, low quality, normal quality, jpeg artifacts, signature, watermark, username, blurry"""
 
     # Set sd params
-    model_dir = "/Users/christopherjohns/Documents/python/sdlora-capstone-server/AnyLoRA_noVae_fp16-pruned.safetensors"
-    lora_dir = "/Users/christopherjohns/Documents/python/sdlora-capstone-server/capstone.safetensors"
+    model_dir = base_path + "AnyLoRA_noVae_fp16-pruned.safetensors"
+    lora_dir = base_path + "capstone.safetensors"
     clip_skip = 0
     scheduler = "EADS"
     seed = random.randint(42,4294967295)
@@ -82,11 +92,25 @@ async def create_prompt(prompt: PromptRequest):
         verbose = True,
     )
 
-    # Save image to disk
-    image_name = str(seed) + ".png"
-    image.save(os.path.join("/Users/christopherjohns/Documents/python/sdlora-capstone-server", image_name))
+    public_id = ""
+    image_path = ""
 
-    res.image = image_name
+    # Save image to disk
+    while True:
+        public_id = shortuuid.uuid()
+        image_name = public_id + ".png"
+        image_path = os.path.join(base_path, image_name)
+        if os.path.isfile(image_path) is False:
+            break
+    image.save(image_path)
+
+    cloudinary.uploader.upload(image_path, public_id=public_id, unique_filename=False, overwrite=True)
+    srcURL = cloudinary.CloudinaryImage(public_id).build_url()
+
+    # Remove file locally
+    os.remove(image_path)
+
+    res.image = srcURL
     return res
 
 
