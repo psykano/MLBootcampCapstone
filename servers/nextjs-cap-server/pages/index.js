@@ -1,7 +1,51 @@
 import Head from "next/head";
 import styles from "../styles/Home.module.css";
+import React, { useState } from "react";
+import Image from "next/image";
 
 export default function Home() {
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState(null)
+  const [perfume, setPerfume] = useState(null)
+
+  async function onSubmit(event) {
+    event.preventDefault()
+
+    try {
+      const formData = new FormData(event.target)
+
+      console.log('here:')
+      console.log(formData.get('shape'))
+
+      const body = {color: formData.get('color'), shape: formData.get('shape'), top: formData.get('top')}
+      const response = await fetch('/api/prompt', {
+        method: 'POST',
+        body: JSON.stringify(body),
+        headers: {
+          'content-type': 'application/json'
+        }
+      })
+
+      if (!response.ok) {
+        throw new Error('Failed to submit the data.')
+      }
+   
+      // Handle response if necessary
+      const data = await response.json()
+      if (data.image) {
+        setPerfume(data.image)
+      } else {
+        throw new Error('Failed to generate perfume.')
+      }
+    } catch (error) {
+      // Capture the error message to display to the user
+      setError(error.message)
+      console.error(error)
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
   return (
     <div className={styles.container}>
       <Head>
@@ -19,38 +63,27 @@ export default function Home() {
           <code className={styles.code}>pages/index.js</code>
         </p>
 
-        <div className={styles.grid}>
-          <a href="https://nextjs.org/docs" className={styles.card}>
-            <h3>Documentation &rarr;</h3>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
-
-          <a href="https://nextjs.org/learn" className={styles.card}>
-            <h3>Learn &rarr;</h3>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/canary/examples"
-            className={styles.card}
-          >
-            <h3>Examples &rarr;</h3>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
-
-          <a
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.card}
-          >
-            <h3>Deploy &rarr;</h3>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
-        </div>
+        <form onSubmit={onSubmit}>
+          <p>Shape:</p>
+          <input type="text" name="shape" />
+          <p>Color:</p>
+          <input type="text" name="color" />
+          <p>Top:</p>
+          <input type="text" name="top" />
+          <button type="submit">Submit</button>
+        </form>
       </main>
+
+      <div>
+        {(perfume && perfume.trim() !== '') &&
+          <Image
+            src={perfume}
+            width={500}
+            height={500}
+            alt="Picture of the author"
+          />
+        }
+      </div>
 
       <footer className={styles.footer}>
         <a

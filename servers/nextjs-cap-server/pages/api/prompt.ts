@@ -10,19 +10,24 @@ export default async function handler(
 ) {
   if (req.method === 'POST') {
     try {
+      console.log('got:')
+      console.log(req.body)
       const apiKey = process.env.API_KEY
       const apiUrl = process.env.API_URL
-      const data = {key: apiKey, color: req.body.color, shape: req.body.shape, top: req.body.top}
+      const body = {key: apiKey, color: req.body.color, shape: req.body.shape, top: req.body.top}
       const response = await fetch(apiUrl,{
         method: 'POST',
-        body: JSON.stringify(data),
+        body: JSON.stringify(body),
         headers: {
           'content-type': 'application/json'
         }
       })
-      let rbody = await response.json();
-      if (rbody.image) {
-        res.status(200).json({ image: rbody.image })
+      if (!response.ok) {
+        throw new Error('Failed to submit the data.')
+      }
+      const data = await response.json();
+      if (data.image) {
+        res.status(200).json({ image: data.image })
       } else {
         res.status(200).json({ image: '' })
       }
