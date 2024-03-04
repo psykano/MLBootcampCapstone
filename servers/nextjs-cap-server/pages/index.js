@@ -2,6 +2,7 @@ import Head from "next/head";
 import styles from "../styles/Home.module.css";
 import React, { useState } from "react";
 import Image from "next/image";
+import Perfume from './perfume'
 
 export default function Home() {
   const [isLoading, setIsLoading] = useState(false)
@@ -10,6 +11,9 @@ export default function Home() {
 
   async function onSubmit(event) {
     event.preventDefault()
+    setIsLoading(true)
+    setError(null)
+    setPerfume(null)
 
     try {
       const formData = new FormData(event.target)
@@ -49,51 +53,38 @@ export default function Home() {
   return (
     <div className={styles.container}>
       <Head>
-        <title>Create Next App</title>
+        <title>Create Perfume</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
       <main className={styles.main}>
         <h1 className={styles.title}>
-          Welcome to <a href="https://nextjs.org">Next.js</a> on Docker!
+          Create a new perfume
         </h1>
 
         <p className={styles.description}>
-          Get started by editing{" "}
-          <code className={styles.code}>pages/index.js</code>
+          Choose how you want your new perfume to look:
         </p>
 
         <form onSubmit={onSubmit}>
           <p>Shape:</p>
-          <input type="text" name="shape" />
-          <p>Color:</p>
-          <input type="text" name="color" />
-          <p>Top:</p>
-          <input type="text" name="top" />
-          <button type="submit">Submit</button>
+          <input type="text" name="shape" placeholder="Square" />
+          <p>Bottle color:</p>
+          <input type="text" name="color" placeholder="Red" />
+          <p>Top color:</p>
+          <input type="text" name="top" placeholder="Silver" />
+          <p></p>
+          {isLoading ? (
+            <button type="submit" disabled>Submit</button>
+          ) : (
+            <button type="submit">Submit</button>
+          )}
         </form>
       </main>
 
-      <div>
-        {(perfume && perfume.trim() !== '') &&
-          <Image
-            src={perfume}
-            width={500}
-            height={500}
-            alt="Picture of the author"
-          />
-        }
-      </div>
+      <Perfume isLoading={isLoading} error={error} perfume={perfume} />
 
       <footer className={styles.footer}>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{" "}
-          <img src="/vercel.svg" alt="Vercel Logo" className={styles.logo} />
-        </a>
       </footer>
     </div>
   );
