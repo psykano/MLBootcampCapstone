@@ -17,10 +17,6 @@ export default function Home() {
 
     try {
       const formData = new FormData(event.target)
-
-      console.log('here:')
-      console.log(formData.get('shape'))
-
       const body = {color: formData.get('color'), shape: formData.get('shape'), top: formData.get('top')}
       const response = await fetch('/api/prompt', {
         method: 'POST',
@@ -58,31 +54,46 @@ export default function Home() {
       </Head>
 
       <main className={styles.main}>
-        <h1 className={styles.title}>
-          Create a new perfume
-        </h1>
+        <div className="mb-4">
+          <h1 className={styles.title}>
+            Create a new perfume
+          </h1>
+        </div>
 
-        <p className={styles.description}>
-          Choose how you want your new perfume to look:
-        </p>
+        <div className="mb-8">
+          <p className={styles.description}>
+            Choose how you want your new perfume to look:
+          </p>
+        </div>
 
-        <form onSubmit={onSubmit}>
-          <p>Shape:</p>
-          <input type="text" name="shape" placeholder="Square" />
-          <p>Bottle color:</p>
-          <input type="text" name="color" placeholder="Red" />
-          <p>Top color:</p>
-          <input type="text" name="top" placeholder="Silver" />
-          <p></p>
+        <form className="bg-gray-50 shadow-md rounded px-8 pt-6 pb-8 mb-6" onSubmit={onSubmit}>
+          <div className="mb-4">
+            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="shape">
+              Shape
+            </label>
+            <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" type="text" name="shape" placeholder="Square" />
+          </div>
+          <div className="mb-6">
+            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="bottlecolor">
+              Bottle color
+            </label>
+            <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" type="text" name="color" placeholder="Red" />
+          </div>
+            <div className="mb-6">
+            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="topcolor">
+              Top color
+            </label>
+            <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" type="text" name="top" placeholder="Silver" />
+          </div>
           {isLoading ? (
-            <button type="submit" disabled>Submit</button>
+            <button className="bg-gray-500 text-white font-bold py-2 px-4 rounded" type="submit" disabled>Submit</button>
           ) : (
-            <button type="submit">Submit</button>
+            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">Submit</button>
           )}
         </form>
-      </main>
 
-      <Perfume isLoading={isLoading} error={error} perfume={perfume} />
+        <Perfume isLoading={isLoading} error={error} perfume={perfume} />
+      </main>
 
       <footer className={styles.footer}>
       </footer>
