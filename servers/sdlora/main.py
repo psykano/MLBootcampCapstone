@@ -5,6 +5,7 @@ import shortuuid
 import torch
 import cloudinary
 import cloudinary.uploader
+import ssl
 from typing import Union
 from fastapi import FastAPI
 from pydantic import BaseModel
@@ -32,6 +33,8 @@ cloudinary.config(
 )
 
 app = FastAPI()
+ssl_keyfile = base_path + 'privkey.pem'
+ssl_certfile = base_path + 'fullchain.pem'
 
 
 @app.get("/")
@@ -121,4 +124,4 @@ def generate_prompt(prompt: PromptRequest):
 # For debugging
 import uvicorn
 if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    uvicorn.run(app, host="0.0.0.0", port=8000, ssl_keyfile=ssl_keyfile, ssl_certfile=ssl_certfile)
