@@ -66,7 +66,7 @@ export default function Home() {
           </p>
         </div>
 
-        <form className="bg-gray-50 shadow-md rounded px-8 pt-6 pb-8 mb-6" onSubmit={onSubmit}>
+        <form className="bg-gray-50 shadow-md rounded px-8 pt-6 pb-8 mb-6 w-64" onSubmit={onSubmit}>
           <div className="mb-4">
             <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="shape">
               Shape
@@ -96,6 +96,7 @@ export default function Home() {
       </main>
 
       <footer className={styles.footer}>
+        &copy; 2024 Chris Johns | All Rights Reserved
       </footer>
     </div>
   );
