@@ -57,8 +57,15 @@ async def create_prompt(prompt: PromptRequest):
     if not (prompt.color.isalpha() and prompt.shape.isalpha() and prompt.top.isalpha()):
         return res
     
+    imageURL = await generate_image(prompt)
+    res.image = imageURL
+
+    return res
+
+
+async def generate_image(prompt: PromptRequest):
     # Generate prompt
-    positive_prompt = generate_prompt(prompt)
+    positive_prompt = await generate_prompt(prompt)
     negative_prompt = """lowres, text, error, cropped, worst quality, low quality, normal quality, jpeg artifacts, signature, watermark, username, blurry"""
 
     # Set sd params
@@ -113,15 +120,14 @@ async def create_prompt(prompt: PromptRequest):
     # Remove file locally
     os.remove(image_path)
 
-    res.image = srcURL
-    return res
+    return srcURL
 
 
-def generate_prompt(prompt: PromptRequest):
+async def generate_prompt(prompt: PromptRequest):
     return """masterpiece, best quality, simple background, white background, solo, perfume, bottle, a single bottle of perfume on a white background, {} and {} perfume bottle with a {} top""".format(prompt.shape, prompt.color, prompt.top)
 
 
 # For debugging
 import uvicorn
 if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=8000, ssl_keyfile=ssl_keyfile, ssl_certfile=ssl_certfile)
+    uvicorn.run("main:app", host="0.0.0.0", port=8000, ssl_keyfile=ssl_keyfile, ssl_certfile=ssl_certfile, workers=4)
