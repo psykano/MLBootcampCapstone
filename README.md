@@ -8,7 +8,9 @@ And try creating your own perfume!
 
 #### Check it out!
 
-TODO: link youtube video
+[![Watch the video](https://i.ytimg.com/vi/HcWfM6Sdn_Q/maxresdefault.jpg)](https://youtu.be/HcWfM6Sdn_Q)
+
+(Click to see the video on YouTube)
 
 #### Public API
 
