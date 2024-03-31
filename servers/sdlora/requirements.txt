@@ -1,0 +1,13 @@
+cloudinary==1.39.0
+fastapi==0.110.0
+pydantic==2.6.4
+python-dotenv==1.0.1
+shortuuid==1.0.13
+torch==2.2.1
+uvicorn==0.29.0
+transformers==4.35.2
+accelerate==0.25.0
+diffusers==0.24.0
+huggingface_hub==0.19.4
+omegaconf==2.3.0
+compel==2.0.2
