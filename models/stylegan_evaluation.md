@@ -1,6 +1,6 @@
 ### StyleGAN Model Evaluation
 
-Inception score source: https://github.com/sbarratt/inception-score-pytorch
+#### Data
 
 The inception score was calculated for the following model generations:
 
@@ -19,6 +19,12 @@ The inception score was calculated for the following model generations:
 | 500 | 1.01160848   |
 | 531 | 1.011361886  |
 
+#### Plot
+
 Here is the plot of model generation vs inception score:
 
 ![style_plot](style_plot.png)
+
+#### Source
+
+Inception score source: https://github.com/sbarratt/inception-score-pytorch
